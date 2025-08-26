@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
-import { getDemandes } from "../../services/demandeService";
-import { Demande } from "../../types/demande";
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Button, Pressable, TouchableOpacity } from "react-native";
+import { getDemandes } from "@/src/services/demandeService";
+import { getClients } from "@/src/services/clientService";
+import { Demande } from "@/src/types/demande";
+import { Client } from "@/src/types/client";
 
 const DemandesList = () => {
     const [demandes, setDemandes] = useState<Demande[]>([]);
+    const [clients, setClients] = useState<Client[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -12,6 +15,8 @@ const DemandesList = () => {
             try {
                 const demandesData = await getDemandes();
                 setDemandes(demandesData);
+                const clientsData = await getClients();
+                setClients(clientsData);
             } catch (error) {
                 console.error("Error fetching demandes:", error);
             } finally {
@@ -35,17 +40,22 @@ const DemandesList = () => {
                 <View style={styles.table}>
                     {/* Header */}
                     <View style={[styles.row, styles.headerRow]}>
-                        <Text style={[styles.cell, styles.headerCell, { width: 200 }]}>Client ID</Text>
-                        <Text style={[styles.cell, styles.headerCell, { width: 300 }]}>Description</Text>
-                        <Text style={[styles.cell, styles.headerCell, { width: 150 }]}>Date d'exécution</Text>
+                        <Text style={[styles.cell, styles.headerCell, { width: 150 }]}>Client</Text>
+                        <Text style={[styles.cell, styles.headerCell, { width: 130 }]}>Date d'exécution</Text>
+                        <Text style={[styles.cell, styles.headerCell, { width: 50 }]}>Voir</Text>
                     </View>
 
                     {/* Body */}
                     {demandes.map((demande, index) => (
                         <View key={demande.id} style={[styles.row, index === demandes.length - 1 ? styles.lastRow : null]}>
-                            <Text style={[styles.cell, { width: 200 }]}>{demande.clientId}</Text>
-                            <Text style={[styles.cell, { width: 300 }]}>{demande.description}</Text>
-                            <Text style={[styles.cell, { width: 150 }]}>{demande.dateExecution.toLocaleDateString()}</Text>
+                            <Text style={[styles.cell, { width: 150 }]}>
+                                {clients.find((c) => c.id === demande.clientId)?.name || "Inconnu"}
+                            </Text>
+                            <Text style={[styles.cell, { width: 130 }]}>{demande.dateExecution.toLocaleDateString()}</Text>
+
+                            <TouchableOpacity onPress={()=>{alert(demande.description)}} style={[styles.cell, { width: 50 }]}>
+                               <Text> 👁️ </Text>                                
+                            </TouchableOpacity>
                         </View>
                     ))}
                 </View>
