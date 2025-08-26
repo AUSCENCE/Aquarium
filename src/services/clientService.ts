@@ -1,13 +1,12 @@
 // clientService.ts
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
-import { Client } from "@/src/types/client";
-import { db } from "@/src/config/firebaseConfig";
+import { Client } from "../types/client";
+import { db } from "../config/firebaseConfig";
 
 const clientsCollection = collection(db, "clients");
 
 // 🔹 Ajouter un client
-export const addClient = async (client : Client  ) => {
-    
+export const addClient = async (client: Omit<Client, 'id'>) => {
     const newClient = {
         ...client,
         name: client.name.trim(),
@@ -18,17 +17,24 @@ export const addClient = async (client : Client  ) => {
 };
 
 // 🔹 Récupérer tous les clients
-export const getClients = async () => {
+export const getClients = async (): Promise<Client[]> => {
   const querySnapshot = await getDocs(clientsCollection);
-  let clients: any[] = [];
+  const clients: Client[] = [];
   querySnapshot.forEach((d) => {
-    clients.push({ id: d.id, ...d.data() });
+    const data = d.data();
+    clients.push({
+        id: d.id,
+        name: data.name,
+        phone: data.phone,
+        address: data.address,
+        createdAt: data.createdAt?.toDate() // handle potential undefined value and convert timestamp
+    });
   });
   return clients;
 };
 
 // 🔹 Mettre à jour un client
-export const updateClient = async (id: string, updates: any) => {
+export const updateClient = async (id: string, updates: Partial<Client>) => {
   const clientRef = doc(db, "clients", id);
   await updateDoc(clientRef, updates);
 };

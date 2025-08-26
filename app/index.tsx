@@ -6,13 +6,11 @@ import HomeScreen from "./screens/HomeScreen";
 import ClientsScreen from "./screens/clients/ClientsScreen";
 import SettingsScreen from "./screens/setting/SettingsScreen";
 import { DemandeScreen } from "./screens/demande/DemandeScreen";
-import { ListDemande } from "./screens/demande/ListScreen";
 
 export type RootDrawerParamList = {
   Accueil: undefined;
   Clients: undefined;
   Demandes: undefined;
-  ListDemandes: undefined;
   Paramètres: undefined;
 };
 
@@ -56,17 +54,6 @@ export default function AppNavigator() {
                 ),
             }}
         />
-        
-        <Drawer.Screen
-            name="ListDemandes"
-            component={ListDemande}
-            options={{
-                drawerIcon: ({ color, size }) => (
-                    <Ionicons name="list-circle" color={color} size={size} />
-                ),
-            }}
-        />
-        
       <Drawer.Screen
         name="Paramètres"
         component={SettingsScreen}

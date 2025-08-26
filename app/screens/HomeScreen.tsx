@@ -1,9 +1,9 @@
-import DemandesList from "../../src/components/Demande/DemandesList";
+import DailyStatusTable from "../../src/components/DailyStatusTable";
 
 const HomeScreen = () => {
     return (
         <>
-            <DemandesList />
+            <DailyStatusTable />
         </>
     );
 };

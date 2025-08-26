@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DropDownPicker from "react-native-dropdown-picker";
-import { Demande } from "@/src/types/demande";
-import { Client } from "@/src/types/client";
-import { getClients } from "@/src/services/clientService";
+import { Demande } from "../../types/demande";
+import { Client } from "../../types/client";
+import { getClients } from "../../services/clientService";
 
 type Props = {
     onSubmit: (demande: Omit<Demande, 'id'>) => void;
@@ -30,11 +30,7 @@ const FormDemande = ({ onSubmit }: Props) => {
 
     useEffect(() => {
         if (clients.length > 0) {
-            setItems(
-                clients
-                    .filter((c) => typeof c.id === "string")
-                    .map((c) => ({ label: c.name, value: c.id as string }))
-            );
+            setItems(clients.map((c) => ({ label: c.name, value: c.id })));
         }
     }, [clients]);
 

@@ -1,8 +1,6 @@
 export interface Entretien {
     id?: string;
     clientId: string;
-    EntretienDu: Date;
-    description: string;
-    dateExecution: Date;    
+    date: Date;
     createdAt?: Date;
 }

@@ -1,7 +1,7 @@
 import { Alert, StyleSheet, View } from "react-native";
-import { Demande } from "@/src/types/demande";
-import FormDemande from "@/src/components/Demande/FormDemande";
-import { addDemande } from "@/src/services/demandeService";
+import { Demande } from "../../src/types/demande";
+import FormDemande from "../../src/components/Demande/FormDemande";
+import { addDemande } from "../../src/services/demandeService";
 
 export const DemandeScreen = () => {
     const handleNewDemande = async (nouvelleDemande: Omit<Demande, 'id'>) => {
