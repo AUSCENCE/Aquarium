@@ -1,14 +1,11 @@
-import DayJardain from "@/src/components/jardins/days";
+import DemandesList from "../../src/components/Demande/DemandesList";
 
-const HomeScreen = () =>{
-    
-    return(
+const HomeScreen = () => {
+    return (
         <>
-                <DayJardain></DayJardain>
+            <DemandesList />
         </>
-    )
-
-}
-
+    );
+};
 
 export default HomeScreen;
