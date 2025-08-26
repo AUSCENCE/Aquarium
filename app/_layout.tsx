@@ -1,29 +1,68 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { Ionicons } from "@expo/vector-icons";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import React from "react";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import HomeScreen from "./screens/HomeScreen";
+import ClientsScreen from "./screens/clients/ClientsScreen";
+import SettingsScreen from "./screens/setting/SettingsScreen";
+import {DemandeScreen} from "@/screens/demande/DemandeScreen";
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+export type RootDrawerParamList = {
+  Accueil: undefined;
+  Clients: undefined;
+  Demandes: undefined;
+  Paramètres: undefined;
+};
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
+const Drawer = createDrawerNavigator<RootDrawerParamList>();
 
+export default function AppNavigator() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Drawer.Navigator
+      initialRouteName="Accueil"
+      screenOptions={{
+        drawerActiveTintColor: "#1876B4FF",
+        drawerInactiveTintColor: "gray",
+        headerShown: true,
+      }}
+    >
+      <Drawer.Screen
+        name="Accueil"
+        component={HomeScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Clients"
+        component={ClientsScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="people" color={color} size={size} />
+          ),
+        }}
+      />
+
+        <Drawer.Screen
+            name="Demandes"
+            component={DemandeScreen}
+            options={{
+                drawerIcon: ({ color, size }) => (
+                    <Ionicons name="list-circle" color={color} size={size} />
+                ),
+            }}
+        />
+      <Drawer.Screen
+        name="Paramètres"
+        component={SettingsScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="settings" color={color} size={size} />
+          ),
+        }}
+      />
+    </Drawer.Navigator>
   );
 }

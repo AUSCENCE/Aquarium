@@ -1,51 +1,69 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Button, Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Demande } from "@/src/types/demande";
 import { Client } from "@/src/types/client";
+import { getClients } from "@/src/services/clientService";
 
-
-const DemandeForm: React.FC<{
-    clients: Client[];
+type Props = {
     onSubmit: (demande: Demande) => void;
-}> = ({ clients, onSubmit }) => {
+};
+
+export const DemandeForm = ({ onSubmit }: Props) => {
+    const [clients, setClients] = useState<Client[]>([]);
     const [description, setDescription] = useState("");
-    const [dateExecution, setDateExecution] = useState<Date>(new Date());
+    const [dateExecution, setDateExecution] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
 
-    // Gestion du Select
+    // ✅ Déclencher le chargement des clients une seule fois au montage du composant
+    useEffect(() => {
+        const loadClients = async () => {
+            const data = await getClients();
+            setClients(data);
+        };
+        loadClients();
+    }, []); // Le tableau de dépendances vide []
+     const loadClients = async () => {
+            const data = await getClients();
+            setClients(data);
+        };
+        loadClients();
+    // Sélecteur de client
     const [open, setOpen] = useState(false);
     const [clientId, setClientId] = useState<string | null>(null);
-    const [items, setItems] = useState(
-        clients.map((c) => ({ label: c.name, value: c.id }))
-    );
+    const [items, setItems] = useState<any[]>([]); // ✅ Initialiser avec un tableau vide
+
+    // ✅ Mettre à jour les items lorsque l'état 'clients' change
+    useEffect(() => {
+        if (clients.length > 0) {
+            setItems(clients.map((c) => ({ label: c.name, value: c.id })));
+        }
+    }, [clients]);
 
     const handleSubmit = () => {
-        if (!clientId || !description) return;
-
+        if (!clientId) {
+            // Optionally, you can show an error or return early
+            return;
+        }
         const demande: Demande = {
-            clientId,
             description,
             dateExecution,
-            createdAt: new Date(),
+            clientId,
+            // Ajoutez d'autres champs requis par le type Demande si nécessaire
         };
-
         onSubmit(demande);
-
-        // Réinitialiser
-        setClientId(null);
-        setDescription("");
-        setDateExecution(new Date());
     };
 
-    const onDateChange = (event: any, selectedDate?: Date) => {
+    const onDateChange = (_event: any, selectedDate?: Date) => {
         const currentDate = selectedDate || dateExecution;
         setShowDatePicker(Platform.OS === "ios");
         setDateExecution(currentDate);
     };
 
     return (
+
         <View style={{ padding: 20 }}>
             <Text style={{ fontWeight: "bold", fontSize: 16, marginBottom: 10 }}>
                 Nouvelle Demande
@@ -57,7 +75,7 @@ const DemandeForm: React.FC<{
                 value={clientId}
                 items={items}
                 setOpen={setOpen}
-                setValue={setClientId}
+                setValue={setClientId as any} // ✅ obligé de caster car DropDownPicker attend une fonction spéciale
                 setItems={setItems}
                 searchable={true}
                 placeholder="Sélectionner un client"
@@ -99,7 +117,7 @@ const DemandeForm: React.FC<{
 
             <Button title="Enregistrer la demande" onPress={handleSubmit} />
         </View>
+
     );
 };
 
-export default DemandeForm;
