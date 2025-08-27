@@ -1,14 +1,11 @@
-import DayJardain from "@/src/components/jardins/days";
+import DailyStatusTable from "../../src/components/DailyStatusTable";
 
-const HomeScreen = () =>{
-    
-    return(
+const HomeScreen = () => {
+    return (
         <>
-                <DayJardain></DayJardain>
+            <DailyStatusTable />
         </>
-    )
-
-}
-
+    );
+};
 
 export default HomeScreen;

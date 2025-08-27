@@ -1,15 +1,68 @@
-import { Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import React from "react";
 
-export default function Index() {
+import HomeScreen from "./screens/HomeScreen";
+import ClientsScreen from "./screens/clients/ClientsScreen";
+import SettingsScreen from "./screens/setting/SettingsScreen";
+import { DemandeScreen } from "./screens/demande/DemandeScreen";
+
+export type RootDrawerParamList = {
+  Accueil: undefined;
+  Clients: undefined;
+  Demandes: undefined;
+  Paramètres: undefined;
+};
+
+const Drawer = createDrawerNavigator<RootDrawerParamList>();
+
+export default function AppNavigator() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+    <Drawer.Navigator
+      initialRouteName="Accueil"
+      screenOptions={{
+        drawerActiveTintColor: "#1876B4FF",
+        drawerInactiveTintColor: "gray",
+        headerShown: true,
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+      <Drawer.Screen
+        name="Accueil"
+        component={HomeScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Clients"
+        component={ClientsScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="people" color={color} size={size} />
+          ),
+        }}
+      />
+
+        <Drawer.Screen
+            name="Demandes"
+            component={DemandeScreen}
+            options={{
+                drawerIcon: ({ color, size }) => (
+                    <Ionicons name="list-circle" color={color} size={size} />
+                ),
+            }}
+        />
+      <Drawer.Screen
+        name="Paramètres"
+        component={SettingsScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="settings" color={color} size={size} />
+          ),
+        }}
+      />
+    </Drawer.Navigator>
   );
 }
