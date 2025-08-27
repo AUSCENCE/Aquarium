@@ -1,7 +1,7 @@
 // src/services/demandeService.ts
 import { addDoc, collection, getDocs } from "firebase/firestore";
-import { Demande } from "@/src/types/demande";
-import { db } from "@/src/config/firebaseConfig";
+import { Demande } from "../types/demande";
+import { db } from "../config/firebaseConfig";
 
 const demandesCollection = collection(db, "demandes");
 
